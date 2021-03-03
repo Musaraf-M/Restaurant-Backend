@@ -93,7 +93,44 @@ const loginController = async (req, res) => {
     });
 };
 
+// Update user details
+const updateUserController = async (req, res) => {
+    // Validation
+    const {
+        error
+    } = userValidation(req.body);
+    if (error) {
+        return res.status(400).send(error.details[0].message);
+    }
+
+    try {
+        const updatedUser = await User.updateOne({
+            _id: req.user.id
+        }, {
+            $set: req.body
+        });
+
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+};
+
+// Delete user account
+const deleteUserController = async (req, res) => {
+    try {
+        const deletedUser = await User.deleteOne({
+            _id: req.user.id,
+        });
+
+        res.json(deletedUser);
+    } catch (err) {
+        res.status(400).send(err.message);
+    }
+};
 
 
 module.exports.registerController = registerController;
 module.exports.loginController = loginController;
+module.exports.updateUserController = updateUserController;
+module.exports.deleteUserController = deleteUserController;

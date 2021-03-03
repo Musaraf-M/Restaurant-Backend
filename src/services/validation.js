@@ -43,7 +43,7 @@ const loginValidation = (data) => {
 // User data validation
 const userValidation = (data) => {
     const schema = joi.object({
-        name: joi.string().min(6).required(),
+        name: joi.string().min(6).required()
     });
 
     return schema.validate(data);
