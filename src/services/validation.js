@@ -48,3 +48,8 @@ const userValidation = (data) => {
 
     return schema.validate(data);
 };
+
+// Exports
+module.exports.registerValidation = registerValidation;
+module.exports.loginValidation = loginValidation;
+module.exports.userValidation = userValidation;
