@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
+// Route imports
+const userRoute = require("./components/user/route");
+
 // Express
 const app = express();
 
@@ -25,10 +28,16 @@ mongoose.connect(process.env.DB_CONNECT, {
 //Middlewares
 app.use(express.json());
 
+
+
 //Mock Request
 app.get("/", (req,res) => {
     res.send("<h1>API is working</h1>");
 })
+
+// Routes
+app.use('/user', userRoute);
+
 // Port
 const PORT = process.env.PORT || 3000;
 
