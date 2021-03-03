@@ -6,7 +6,8 @@ var User = require("./model");
 var _require = require("../../services/validation"),
     registerValidation = _require.registerValidation,
     loginValidation = _require.loginValidation,
-    userValidation = _require.userValidation;
+    userValidation = _require.userValidation,
+    passwordValidation = _require.passwordValidation;
 
 var bcrypt = require("bcrypt");
 
@@ -241,9 +242,97 @@ var deleteUserController = function deleteUserController(req, res) {
       }
     }
   }, null, null, [[0, 7]]);
+}; // Change password of an user
+
+
+var changePasswordController = function changePasswordController(req, res) {
+  var _passwordValidation, error, user, validPassword, salt, hashPassword, updatedPassword;
+
+  return regeneratorRuntime.async(function changePasswordController$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          // Validation
+          _passwordValidation = passwordValidation(req.body), error = _passwordValidation.error;
+
+          if (!error) {
+            _context5.next = 3;
+            break;
+          }
+
+          return _context5.abrupt("return", res.status(400).send("Password of minimum length 6, must contain atleast 1 special character, 1 lowercase letter, 1 uppercase letter and 1 number"));
+
+        case 3:
+          _context5.next = 5;
+          return regeneratorRuntime.awrap(User.findById(req.user.id));
+
+        case 5:
+          user = _context5.sent;
+
+          if (user) {
+            _context5.next = 8;
+            break;
+          }
+
+          return _context5.abrupt("return", res.status(400).send("Email not found, try creating an account!"));
+
+        case 8:
+          _context5.next = 10;
+          return regeneratorRuntime.awrap(bcrypt.compare(req.body.oldPassword, user.password));
+
+        case 10:
+          validPassword = _context5.sent;
+
+          if (validPassword) {
+            _context5.next = 14;
+            break;
+          }
+
+          console.log(user.password);
+          return _context5.abrupt("return", res.status(400).send("Old password incorrect"));
+
+        case 14:
+          _context5.next = 16;
+          return regeneratorRuntime.awrap(bcrypt.genSalt(10));
+
+        case 16:
+          salt = _context5.sent;
+          _context5.next = 19;
+          return regeneratorRuntime.awrap(bcrypt.hash(req.body.newPassword, salt));
+
+        case 19:
+          hashPassword = _context5.sent;
+          _context5.prev = 20;
+          _context5.next = 23;
+          return regeneratorRuntime.awrap(User.updateOne({
+            _id: req.user.id
+          }, {
+            $set: {
+              password: hashPassword
+            }
+          }));
+
+        case 23:
+          updatedPassword = _context5.sent;
+          res.json(updatedPassword);
+          _context5.next = 30;
+          break;
+
+        case 27:
+          _context5.prev = 27;
+          _context5.t0 = _context5["catch"](20);
+          res.status(400).send(_context5.t0.message);
+
+        case 30:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  }, null, null, [[20, 27]]);
 };
 
 module.exports.registerController = registerController;
 module.exports.loginController = loginController;
 module.exports.updateUserController = updateUserController;
 module.exports.deleteUserController = deleteUserController;
+module.exports.changePasswordController = changePasswordController;
