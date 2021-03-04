@@ -27,18 +27,18 @@ const dishRegisterController = async (req, res) => {
 
     if (isDishExist) {
         try {
-
+            //  Food exist in restaurant
             flag = false;
             isDishExist.restaurant.forEach((element) => {
-                if ((element.id == req.body.restaurantId)&&(element.cost == req.body.cost)){
+                if (element.id == req.body.restaurantId) {
                     flag = true;
                 }
             });
 
-            if (flag){
-                return res.status(400).send('Food item already presents'); 
+            if (flag) {
+                return res.status(400).send('Food item already presents');
             }
-
+            // update restaurant id in dish
             const updateDish = await Dish.updateOne({
                 name: req.body.name
             }, {
@@ -79,10 +79,19 @@ const dishRegisterController = async (req, res) => {
 // Details controller
 const getDetailController = async (req, res) => {
     try {
-      const dish = await Dish.find(req.query);
-      return res.json(dish);
+        // const regex= `/^${req.query.name}/`  
+        req.query.name = { $regex: new RegExp(req.query.name), $options: 'i' };
+        //   const dish = await Dish.find(req.query);
+        req.query.restaurant = {
+            $elemMatch:
+            {
+                id: req.query.restaurant
+            }
+        };
+        const dish = await Dish.find(req.query);
+        return res.json(dish);
     } catch (error) {
-      return res.status(400).send(error.message);
+        return res.status(400).send(error.message);
     }
 };
 
