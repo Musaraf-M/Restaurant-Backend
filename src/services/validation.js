@@ -77,8 +77,22 @@ const passwordValidation = (data) => {
     return schema.validate(data);
 };
 
+// Dish data Validation
+const dishRegisterValidation = (data) => {
+    const schema = joi.object({
+        name: joi.string().min(6).required(),
+        description: joi.string().required(),
+        cuisine: joi.string().required(),
+        type: joi.string().required(),
+        restaurantId: joi.string().required(),
+        cost: joi.string().required()
+    });
+    return schema.validate(data);
+};
+
 // Exports
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.userValidation = userValidation;
 module.exports.passwordValidation = passwordValidation;
+module.exports.dishRegisterValidation = dishRegisterValidation;

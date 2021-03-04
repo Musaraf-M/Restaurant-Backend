@@ -1,4 +1,4 @@
-// Imports
+ // Imports
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -6,6 +6,7 @@ const cors = require("cors");
 
 // Route imports
 const userRoute = require("./components/user/route");
+const dishRoute = require("./components/dish/route");
 
 // Express
 const app = express();
@@ -37,6 +38,7 @@ app.get("/", (req,res) => {
 
 // Routes
 app.use('/user', userRoute);
+app.use('/dish', dishRoute);
 
 // Port
 const PORT = process.env.PORT || 3000;
