@@ -1,5 +1,6 @@
 // Import
 const Dish = require("./model");
+const Restaurant = require("../restaurant/model");
 const {
     dishRegisterValidation
 } = require("../../services/validation");
@@ -16,7 +17,7 @@ const dishRegisterController = async (req, res) => {
         try {
             return res.status(400).send(error.details[0].message);
         } catch (err) {
-            return res.status(400).send("Restaurant name must be greater than 6 characters");
+            return res.status(400).send("Dish name must be greater than 6 characters");
         }
     }
 
@@ -24,6 +25,12 @@ const dishRegisterController = async (req, res) => {
     const isDishExist = await Dish.findOne({
         name: req.body.name,
     });
+
+    const isRestaurantExist = await Restaurant.findById(req.body.restaurantId);
+
+    if (!isRestaurantExist) {
+        return res.status(400).send('Restaurant not found');
+    }
 
     if (isDishExist) {
         try {
@@ -54,7 +61,7 @@ const dishRegisterController = async (req, res) => {
             res.status(400).send(err.message);
         }
     } else {
-        const dish = new Dish({
+        const dishObj = new Dish({
             name: req.body.name,
             description: req.body.description,
             cuisine: req.body.cuisine,
@@ -66,12 +73,13 @@ const dishRegisterController = async (req, res) => {
         });
 
         try {
-            const savedDish = await dish.save();
-            res.send({
-                dishId: savedDish._id,
-            });
+            const dish = await dishObj.save();
+            isRestaurantExist.dishes.push(req.body.restaurantId);
+            const restaurant = await isRestaurantExist.save();
+
+            return res.json({ restaurant, dish });
         } catch (err) {
-            res.status(400).send(error);
+            res.status(400).send(err.message);
         }
     }
 };
@@ -82,12 +90,14 @@ const getDetailController = async (req, res) => {
         // const regex= `/^${req.query.name}/`  
         req.query.name = { $regex: new RegExp(req.query.name), $options: 'i' };
         //   const dish = await Dish.find(req.query);
-        req.query.restaurant = {
-            $elemMatch:
-            {
-                id: req.query.restaurant
-            }
-        };
+        if (req.query.restaurant){
+            req.query.restaurant = {
+                $elemMatch:
+                {
+                    id: req.query.restaurant
+                }
+            };
+        }
         const dish = await Dish.find(req.query);
         return res.json(dish);
     } catch (error) {

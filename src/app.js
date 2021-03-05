@@ -7,6 +7,7 @@ const cors = require("cors");
 // Route imports
 const userRoute = require("./components/user/route");
 const dishRoute = require("./components/dish/route");
+const restaurantRoute = require("./components/restaurant/route");
 
 // Express
 const app = express();
@@ -39,6 +40,7 @@ app.get("/", (req,res) => {
 // Routes
 app.use('/user', userRoute);
 app.use('/dish', dishRoute);
+app.use('/restaurant', restaurantRoute);
 
 // Port
 const PORT = process.env.PORT || 3000;

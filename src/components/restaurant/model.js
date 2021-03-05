@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const dishSchema = new mongoose.Schema({
+const restaurantSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -10,18 +10,24 @@ const dishSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
+        min: 6,
+        max: 255,
     },
-    cuisine: {
-        type: Array,
-        required: true,
-    },
-    type: {
+    address: {
         type: String,
         required: true,
+        min: 6,
+        max: 255,
     },
-    restaurant: {
-        type: Array,
+    city: {
+        type: String,
         required: true,
+        min: 2,
+        max: 255,
+    },
+    dishes:{
+        type: Array,
+        default: []
     },
     createdAt: {
         type: Date,
@@ -29,4 +35,4 @@ const dishSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model("dishes", dishSchema);
+module.exports = mongoose.model("restaurant", restaurantSchema);

@@ -90,9 +90,21 @@ const dishRegisterValidation = (data) => {
     return schema.validate(data);
 };
 
+// Restaurant data Validation
+const restaurantRegisterValidation = (data) => {
+    const schema = joi.object({
+        name: joi.string().min(6).required(),
+        description: joi.string().required(),
+        address: joi.string().required(),
+        city: joi.string().required()
+    });
+    return schema.validate(data);
+};
+
 // Exports
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.userValidation = userValidation;
 module.exports.passwordValidation = passwordValidation;
 module.exports.dishRegisterValidation = dishRegisterValidation;
+module.exports.restaurantRegisterValidation = restaurantRegisterValidation;
