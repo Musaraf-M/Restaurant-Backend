@@ -96,7 +96,9 @@ const restaurantRegisterValidation = (data) => {
         name: joi.string().min(6).required(),
         description: joi.string().required(),
         address: joi.string().required(),
-        city: joi.string().required()
+        city: joi.string().required(),
+        cuisine: joi.string().required(),
+        restaurantType: joi.string().required()
     });
     return schema.validate(data);
 };

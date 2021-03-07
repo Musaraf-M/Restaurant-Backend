@@ -34,6 +34,8 @@ const restaurantRegisterController = async  (req,res) => {
         description: req.body.description,
         address: req.body.address,
         city: req.body.city,
+        cuisine: req.body.cuisine,
+        restaurantType: req.body.restaurantType
     });
 
     try {
@@ -52,6 +54,12 @@ const getDetailController = async (req,res) => {
         req.query.name = { $regex: new RegExp(req.query.name), $options: 'i'};
         if(req.query.city) {
             req.query.city = req.query.city.toLowerCase();
+        }
+        if(req.query.cuisine) {
+            req.query.cuisine = req.query.cuisine.toLowerCase();
+        }
+        if(req.query.type) {
+            req.query.type = req.query.type.toLowerCase();
         }
         const restaurant = await Restaurant.find(req.query);
         return res.json(restaurant);

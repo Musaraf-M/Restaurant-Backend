@@ -56,7 +56,8 @@ const dishRegisterController = async (req, res) => {
                     }
                 }
             });
-            res.json(updateDish);
+            const dish = await Dish.find({name:req.body.name});
+            return res.json(dish);
         } catch (err) {
             res.status(400).send(err.message);
         }

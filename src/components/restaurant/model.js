@@ -25,6 +25,14 @@ const restaurantSchema = new mongoose.Schema({
         min: 2,
         max: 255,
     },
+    cuisine: {
+        type: String,
+        required: true
+    },
+    restaurantType: {
+        type: String,
+        required: true
+    },
     dishes:{
         type: Array,
         default: []

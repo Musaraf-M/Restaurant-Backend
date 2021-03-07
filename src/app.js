@@ -1,8 +1,9 @@
- // Imports
+// Imports
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const fs = require('fs');
 
 // Route imports
 const userRoute = require("./components/user/route");
@@ -23,7 +24,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(process.env.DB_CONNECT, {
     useUnifiedTopology: true,
     useNewUrlParser: true
-    })
+})
     .then((res) => console.log("Connected to DB"))
     .catch((err) => console.log(err));
 
@@ -31,9 +32,16 @@ mongoose.connect(process.env.DB_CONNECT, {
 app.use(express.json());
 
 
+// Logging
+app.use("/", (req, res, next) => {
+    const currentdate = new Date();
+    fs.appendFileSync('log.txt', `${currentdate.toLocaleString()} ${req.connection.remoteAddress} ${req.method} ${req.url} \n`);
+    next();
+});
+
 
 //Mock Request
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
     res.send("<h1>API is working</h1>");
 })
 
