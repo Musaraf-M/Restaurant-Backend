@@ -89,6 +89,7 @@ const dishRegisterController = async (req, res) => {
 const getDetailController = async (req, res) => {
     try {
         // const regex= `/^${req.query.name}/`  
+        console.log(req.query.name);
         req.query.name = { $regex: new RegExp(req.query.name), $options: 'i' };
         //   const dish = await Dish.find(req.query);
         if (req.query.restaurant){
